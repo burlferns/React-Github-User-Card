@@ -30,7 +30,7 @@ class Header extends React.Component {
       <>
         <StylHead>
           <StylImg src={lambdalogo} alt="Lambda Logo"/>
-          <StylP>❤️'s</StylP>
+          <StylP><span role="img" aria-label="heart logo">❤️'s</span></StylP>
           <StylImg src={githublogo} alt="GitHub Logo" />
         </StylHead>
       </>
