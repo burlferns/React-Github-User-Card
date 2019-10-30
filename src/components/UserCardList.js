@@ -6,6 +6,8 @@ import UserCard from "./UserCard";
 
 // const followerList = [ "tetondan", "dustinmyers", "justsml", "luishrd", "bigknell" ];
 
+const fakeMe = "TheeSweeney";
+
 let compDidMount_count = 0;
 let compDidUpdate_count = 0;
 let render_count = 0;
@@ -27,18 +29,18 @@ class UserCardList extends React.Component {
     console.log(`componentDidMount called and its count is: ${compDidMount_count}`);
     compDidMount_count++;
 
-    // axios
-    //   .get('https://api.github.com/users/tetondan')
-    //   .then(res => {
-    //     console.log("This is myData from the server",res.data);
-    //     this.setState({
-    //       myData : res.data
-    //     });
-    //   })
-    //   .catch(err => console.log(err));
+    axios
+      .get(`https://api.github.com/users/${fakeMe}`)
+      .then(res => {
+        console.log("This is myData from the server",res.data);
+        this.setState({
+          myData : res.data
+        });
+      })
+      .catch(err => console.log(err));
 
     axios
-      .get('https://api.github.com/users/tetondan/followers')
+      .get(`https://api.github.com/users/${fakeMe}/followers`)
       .then(res => {
         console.log("This is my followers from the server",res.data);
         const folAry = res.data.map( elm => elm.url)
@@ -48,41 +50,30 @@ class UserCardList extends React.Component {
         });
       })
       .catch(err => console.log(err));
-
-
     
   }
-
 
   componentDidUpdate() {
     console.log(`componentDidUpdate called and its count is: ${compDidUpdate_count}`);
     compDidUpdate_count++;
 
-    // if(followerData.length===0) {
-      // followerList.forEach( elem => {
-      //   axios
-      //     .get(`https://api.github.com/users/${elem}`)
-      //     .then(res => {
-      //       console.log("This is followerData from the server",res.data);
-      //       this.setState({
-      //         followerData : [ ...this.state.followerData, res.data ]
-      //       });
-      //     })
-      //     .catch(err => console.log(err));
+    if(this.state.followerList.length!==0 && this.state.followerData.length===0) {
+      this.state.followerList.forEach( elem => {
+        axios
+          .get(elem)
+          .then(res => {
+            console.log("This is followerData from the server",res.data);
+            this.setState({
+              followerData : [ ...this.state.followerData, res.data ]
+            });
+          })
+          .catch(err => console.log(err));
 
-      // });
+      });
 
-    // }
-
-
-
+    }
 
   }
-
-
-
-
-
 
 
 
@@ -105,7 +96,7 @@ class UserCardList extends React.Component {
       { (followerList.length===0 || followerData.length!==followerList.length)
         ? <StylPloading>Loading follower data ...</StylPloading>
         : followerData.map( elem =>
-          <UserCard data={elem} key={Date.now()} />
+          <UserCard data={elem} key={Date.now()*Math.random()} />
         )
       }
 
